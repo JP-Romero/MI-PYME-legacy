@@ -25,7 +25,7 @@ export default function FloatingCart({ items, rate, open, onToggle, onQty, onRem
           <p className="mb-3 font-black dark:text-white">🛒 Carrito · {count} artículo{count !== 1 ? 's' : ''}</p>
           {items.length === 0 && <p className="text-sm opacity-60 dark:text-white">Escanea o toca productos para agregar.</p>}
           {items.map(({ product, qty }) => (
-            <div key={product.id} className="mb-2 flex items-center gap-3 rounded-pill bg-white/60 dark:bg-white/5 px-4 py-2">
+            <div className="mb-2 flex items-center gap-3 rounded-pill bg-white/40 dark:bg-[#163832]/40 px-4 py-2">
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold dark:text-white">{product.name}</p>
                 <p className="text-xs opacity-60 dark:text-white">{fmtNio(product.price_nio)} c/u</p>

@@ -143,17 +143,18 @@ export default function Pos() {
       {/* Aviso */}
       {notice && <div className="glass-panel fixed left-1/2 top-20 z-[70] -translate-x-1/2 px-5 py-2 font-bold dark:text-white">{notice}</div>}
 
-      {/* Grilla de productos (tarjetas claymórficas táctiles) */}
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+        <section className="spatial-grid grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 p-2">
         {shown.map(p => {
           const low = p.stock <= (business?.low_stock_threshold ?? 5);
           return (
             <button key={p.id} onClick={() => addProduct(p)}
-              className="clay-card relative text-left active:scale-95 transition-transform min-h-[120px]">
+              className="clay-card relative text-left transition-all hover:-translate-y-2 hover:shadow-float min-h-[140px] flex flex-col justify-between">
               {low && <span className="absolute right-3 top-3 chip bg-coral text-white text-xs">⚠ {p.stock}</span>}
-              <p className="font-bold leading-tight dark:text-white">{p.name}</p>
-              <p className="mt-1 text-xs opacity-60 dark:text-white">{p.unit === 'u' ? '' : `por ${p.unit} · `}Stock: {p.stock}</p>
-              <p className="mt-2 text-lg font-black text-mint drop-shadow-[0_0_8px_rgba(0,245,212,0.35)]">{fmtNio(p.price_nio)}</p>
+              <div>
+                <p className="font-bold leading-tight text-carbon dark:text-white">{p.name}</p>
+                <p className="mt-1 text-xs opacity-60 dark:text-carbon/60 dark:text-white/60">{p.unit === 'u' ? '' : `por ${p.unit} · `}Stock: {p.stock}</p>
+              </div>
+              <p className="mt-2 text-xl font-black text-mint">{fmtNio(p.price_nio)}</p>
             </button>
           );
         })}

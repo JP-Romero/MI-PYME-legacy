@@ -11,7 +11,7 @@ Este es un proyecto de gestión empresarial que incluye funcionalidades como pun
 ## Instalación
 1. Clona el repositorio
 2. Instala las dependencias con `npm install`
-3. Ejecuta la aplicación con `npm start`
+3. Ejecuta la aplicación con `npm start` (o `npm run dev`)
 
 ## Contribuciones
 Las contribuciones son bienvenidas. Por favor, abre un issue o un pull request.

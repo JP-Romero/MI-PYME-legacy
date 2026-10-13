@@ -29,7 +29,7 @@ export default function Login() {
     <main className="grid min-h-full place-items-center p-6">
       <div className="clay-card w-full max-w-sm p-6">
         <h1 className="mb-1 text-center text-3xl font-black dark:text-white">
-          MI <span className="text-mint drop-shadow-[0_0_12px_rgba(0,245,212,0.8)]">PYME</span>
+          MI <span className="text-mint drop-shadow-[0_0_12px_rgba(142,182,155,0.8)]">PYME</span>
         </h1>
         <p className="mb-6 text-center text-sm opacity-60 dark:text-white">Tu TPV gratis, multitienda y sin suscripciones.</p>
 

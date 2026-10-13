@@ -6,16 +6,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Paleta oficial MI PYME
+        // Paleta inspirada en: UI Dark/Orange Premium
         canvas: {
-          light: '#F4F6F9', // Fondo modo claro (Spatial Canvas)
-          dark: '#0E1116',  // Fondo modo oscuro
+          light: '#32363E', // Fondo modo oscuro base
+          dark: '#282C34',  // Fondo modo oscuro degradado
         },
-        mint: '#00F5D4',    // Acento principal / CTA Cobro (Acid Mint)
-        orchid: '#7209B7',  // Acento secundario (Electric Orchid)
-        coral: '#FF5964',   // Alertas / stock bajo (Sunset Coral)
-        amber: '#FFB703',   // Fiado / cuentas por cobrar (Amber Glow)
-        carbon: '#1C1C1E',  // Texto principal (Negro Carbón Suave)
+        mint: '#FF7A00',    // Acento principal (CTA Cobro)
+        orchid: '#FF9A3C',  // Acento secundario (Selección activa)
+        coral: '#FF5964',   // Alertas (mantenemos alerta)
+        amber: '#FFB703',   // Fiado (mantenemos alerta)
+        carbon: '#FFFFFF',  // Texto principal
+        secondary: '#A6ACB8', // Texto secundario
       },
       borderRadius: {
         clay: '28px',       // Esquinas súper redondeadas
@@ -27,7 +28,7 @@ export default {
         'clay-dark': 'inset 0 2px 6px rgba(255,255,255,0.08), 0 14px 36px -8px rgba(0,0,0,0.6)',
         'clay-inset': 'inset 0 3px 8px rgba(28,28,30,0.12), inset 0 -2px 4px rgba(255,255,255,0.7)',
         float: '0 24px 60px -12px rgba(28,28,30,0.35)',
-        glow: '0 0 24px rgba(0,245,212,0.45)',
+        glow: '0 0 24px rgba(142,182,155,0.48)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
