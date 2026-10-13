@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { useApp } from '../hooks/useApp';
 import { createBusiness } from '../lib/api';
+import { supabase } from '../lib/supabase';
 
 const INDUSTRIES = ['abarrotes', 'carniceria', 'ropa'] as const;
 
@@ -16,13 +17,65 @@ export default function Login() {
   const [pass, setPass] = useState('');
   const [err, setErr] = useState<string | null>(null);
 
+  const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+
   // Paso 2: crear negocio si el usuario nuevo no tiene ninguno
   if (user && businesses.length === 0) return <CreateBusinessForm />;
 
+  // Si registró pero email no confirmado, mostrar mensaje
+  if (emailSent) {
+    return (
+      <main className="grid min-h-full place-items-center p-6">
+        <div className="clay-card w-full max-w-sm p-6 text-center">
+          <h2 className="mb-3 text-xl font-black dark:text-white">📬 Confirma tu correo</h2>
+          <p className="mb-4 text-sm opacity-80 dark:text-white">Te enviamos un enlace a <b>{email}</b>. Abre tu correo y confirma para poder ingresar.</p>
+          <button
+            onClick={async () => {
+              setLoading(true);
+              const { error } = await supabase.auth.resend({ type: 'signup', email });
+              setErr(error?.message ?? null);
+              setLoading(false);
+            }}
+            disabled={loading}
+            className="btn-mint w-full disabled:opacity-50"
+          >
+            {loading ? 'Reenviando…' : 'Reenviar correo'}
+          </button>
+          <button onClick={() => { setEmailSent(false); setMode('in'); }} className="btn-ghost w-full dark:text-white mt-3">Volver al ingreso</button>
+        </div>
+      </main>
+    );
+  }
+
   const submit = async () => {
     setErr(null);
-    const e = mode === 'in' ? await signIn(email, pass) : await signUp(name, email, pass);
-    if (e) setErr(e);
+    setLoading(true);
+    try {
+      if (mode === 'in') {
+        const errMsg = await signIn(email, pass);
+        if (errMsg) {
+          if (errMsg.toLowerCase().includes('not confirmed')) {
+            setErr('Tu correo aún no está confirmado. Revisa tu bandeja de entrada.');
+          } else {
+            setErr(errMsg);
+          }
+        }
+      } else {
+        const errMsg = await signUp(name, email, pass);
+        if (errMsg) {
+          if (errMsg.toLowerCase().includes('already registered') || errMsg.toLowerCase().includes('already exists')) {
+            setErr('Ya tienes una cuenta con este correo. Revisa tu bandeja para confirmar, o usa "Reenviar".');
+          } else {
+            setErr(errMsg);
+          }
+        } else {
+          setEmailSent(true);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,12 +111,24 @@ function CreateBusinessForm() {
   const [bizName, setBizName] = useState('');
   const [industry, setIndustry] = useState<(typeof INDUSTRIES)[number]>('abarrotes');
   const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   const create = async () => {
     if (!user || !bizName.trim()) return;
     setSaving(true);
-    await createBusiness(user.id, { name: bizName.trim(), industry });
-    location.reload(); // recarga contexto con el nuevo tenant
+    setErr(null);
+    try {
+      const res = await createBusiness(user.id, { name: bizName.trim(), industry });
+      if (!res) {
+        setErr('No se pudo crear el negocio. Revisa la consola o permisos de RLS.');
+        setSaving(false);
+        return;
+      }
+      location.reload(); // recarga contexto con el nuevo tenant
+    } catch (e: any) {
+      setErr(e?.message ?? 'Error al crear el negocio');
+      setSaving(false);
+    }
   };
 
   return (
@@ -79,6 +144,7 @@ function CreateBusinessForm() {
             </button>
           ))}
         </div>
+        {err && <p className="mb-3 text-sm font-bold text-coral">{err}</p>}
         <button onClick={create} disabled={saving || !bizName.trim()} className="btn-mint w-full disabled:opacity-50">
           {saving ? 'Creando…' : 'Comenzar a vender'}
         </button>
