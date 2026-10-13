@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== MI PYME — Estilos globales Claymorphism + Spatial UI ===== */
+
+:root {
+  --c-mint: #00F5D4;
+  --c-orchid: #7209B7;
+  --c-coral: #FF5964;
+  --c-amber: #FFB703;
+  --c-carbon: #1C1C1E;
+}
+
+html, body, #root { height: 100%; }
+
+body {
+  @apply bg-canvas-light dark:bg-canvas-dark font-sans text-carbon antialiased;
+  /* Evita zoom por doble-tap en el mostrador táctil */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+@layer components {
+  /* Tarjeta claymórfica: superficie blanca, radio 28px, sombras duales */
+  .clay-card {
+    @apply bg-white dark:bg-[#171B22] rounded-clay shadow-clay dark:shadow-clay-dark p-4;
+  }
+
+  /* Panel flotante con efecto acrílico (frosted glass) para carrito y modales */
+  .glass-panel {
+    @apply bg-white/70 dark:bg-white/10 backdrop-blur-xl rounded-clay border border-white/40 dark:border-white/10 shadow-float;
+  }
+
+  /* Botón píldora grande (VisionOS) — CTA de cobro en Acid Mint */
+  .btn-pill {
+    @apply rounded-pill px-6 py-4 font-bold text-base transition-transform active:scale-95 select-none;
+  }
+  .btn-mint   { @apply btn-pill bg-mint text-carbon shadow-glow; }
+  .btn-orchid { @apply btn-pill bg-orchid text-white; }
+  .btn-coral  { @apply btn-pill bg-coral text-white; }
+  .btn-ghost  { @apply btn-pill bg-transparent text-carbon dark:text-white shadow-clay-inset; }
+
+  /* Input claymórfico hundido */
+  .clay-input {
+    @apply w-full rounded-pill bg-canvas-light dark:bg-[#0E1116] shadow-clay-inset
+           px-5 py-4 text-carbon dark:text-white placeholder:text-carbon/40
+           outline-none focus:ring-2 focus:ring-mint/60;
+  }
+
+  /* Chip / etiqueta de categoría */
+  .chip {
+    @apply rounded-pill px-4 py-2 text-sm font-semibold shadow-clay-inset select-none;
+  }
+}
