@@ -21,7 +21,7 @@ export const supabase = createClient(
     auth: {
       persistSession: true,          // Sesión persistente para móvil
       autoRefreshToken: true,
-      detectSessionInUrl: false,     // No es flujo OAuth web
+      detectSessionInUrl: true,      // Capturar tokens de confirmación de email y magic links
     },
     global: {
       // Reintentos suaves para conexiones móviles inestables
