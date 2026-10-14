@@ -32,11 +32,12 @@ export const keys = {
   productsCache: (businessId: string) => `cache:${businessId}:products`,
   categoriesCache: (businessId: string) => `cache:${businessId}:categories`,
   syncQueue: (businessId: string) => `queue:${businessId}:pending`,
+  myBusinesses: (userId: string) => `user:${userId}:businesses`,
 };
 
 export interface QueuedOp {
   id: string;
-  entity: 'sale' | 'product' | 'cash_register' | 'credit_account' | 'cash_movement';
+  entity: 'sale' | 'product' | 'cash_register' | 'credit_account' | 'cash_movement' | 'business';
   op: 'insert' | 'update' | 'delete';
   payload: unknown;
   createdAt: number;

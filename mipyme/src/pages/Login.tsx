@@ -125,8 +125,8 @@ function CreateBusinessForm() {
         return;
       }
       location.reload(); // recarga contexto con el nuevo tenant
-    } catch (e: any) {
-      setErr(e?.message ?? 'Error al crear el negocio');
+    } catch (e: unknown) {
+      setErr((e as Error)?.message ?? 'Error al crear el negocio');
       setSaving(false);
     }
   };

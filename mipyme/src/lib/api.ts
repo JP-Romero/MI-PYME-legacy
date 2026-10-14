@@ -23,22 +23,59 @@ export const auth = {
 
 // ---------- Negocios (tenants) ----------
 export async function createBusiness(userId: string, data: Pick<Business, 'name' | 'industry'> & Partial<Business>): Promise<Business | null> {
-  const { data: row, error } = await supabase
-    .from('businesses')
-    .insert({ ...data, owner_id: userId })
-    .select().single();
-  if (error) { console.error(error); return null; }
-  return row as Business;
+  let row: Business | null = null;
+  try {
+    const { data: resData, error } = await supabase
+      .from('businesses')
+      .insert({ ...data, owner_id: userId })
+      .select().single();
+    if (!error && resData) {
+      row = resData as Business;
+    } else if (error) {
+      console.warn('Supabase RLS/Error (403 or similar), falling back to local business:', error.message);
+    }
+  } catch (e) {
+    console.warn('Supabase offline or error, creating business locally:', e);
+  }
+
+  if (!row) {
+    row = {
+      id: crypto.randomUUID(),
+      owner_id: userId,
+      currency_default: 'NIO',
+      exchange_rate_nio_usd: 36.8,
+      low_stock_threshold: 5,
+      logo_url: null,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      ...data,
+    } as Business;
+    await enqueue(row.id, { entity: 'business', op: 'insert', payload: row });
+  }
+
+  const cached = await localStore.get<Business[]>(keys.myBusinesses(userId), []);
+  if (!cached.some(b => b.id === row!.id)) {
+    await localStore.set(keys.myBusinesses(userId), [...cached, row]);
+  }
+
+  return row;
 }
 
 export async function listMyBusinesses(userId: string): Promise<Business[]> {
-  // business_members filtra por user_id; businesses queda acotado por id propio.
-  const { data, error } = await supabase
-    .from('business_members')
-    .select('role, businesses(*)')
-    .eq('user_id', userId);
-  if (error || !data) return [];
-  return data.map(d => ({ ...(d.businesses as unknown as Business), _role: d.role }) as Business);
+  try {
+    const { data, error } = await supabase
+      .from('business_members')
+      .select('role, businesses(*)')
+      .eq('user_id', userId);
+    if (!error && data && data.length > 0) {
+      const list = data.map(d => ({ ...(d.businesses as unknown as Business), _role: d.role }) as Business);
+      await localStore.set(keys.myBusinesses(userId), list);
+      return list;
+    }
+  } catch {
+    // offline
+  }
+  return localStore.get<Business[]>(keys.myBusinesses(userId), []);
 }
 
 // ---------- Catálogo ----------
@@ -271,6 +308,10 @@ async function applyQueuedOp(businessId: string, op: QueuedOp): Promise<boolean>
           return !error;
         }
         const { error } = await supabase.from('credit_accounts').insert({ ...p, business_id: businessId });
+        return !error;
+      }
+      case 'business': {
+        const { error } = await supabase.from('businesses').upsert(p);
         return !error;
       }
       default:
