@@ -11,7 +11,7 @@ export default function TopBar() {
       <div className="glass-panel flex items-center gap-3 px-4 py-3">
         {/* Selector de tienda (multitienda) */}
         <button onClick={() => setOpen(o => !o)} className="flex items-center gap-2 rounded-pill px-3 py-2 shadow-clay-inset active:scale-95 transition-transform">
-          <span className="h-8 w-8 rounded-full bg-orchid text-white grid place-items-center font-black">✂️</span>
+          <img src="/logo.png" alt="Logo" className="h-8 w-8 rounded-full object-cover" />
           <div className="text-left">
             <p className="font-bold text-xs max-w-[120px] truncate dark:text-white">
               {business?.name ?? 'Salón & Estética'}
