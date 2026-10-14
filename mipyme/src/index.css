@@ -5,21 +5,20 @@
 /* ===== MI PYME — Estilos globales Claymorphism + Spatial UI ===== */
 
 :root {
-  --c-header: #0D223A;
-  --c-header-sat: #1A3B5D;
-  --c-sheet: #EBF1F5;
-  --c-carddark: #1C3047;
-  --c-mint: #32D74B;
-  --c-amber: #F7B250;
+  --c-header: #143959;
+  --c-header-sat: #56738C;
+  --c-sheet: #DCEAF2;
+  --c-carddark: #56738C;
+  --c-accent: #DFAD48;
   --c-coral: #FF5964;
-  --c-carbon: #0F1D2D;
-  --c-secondary: #7D8B9B;
+  --c-carbon: #143959;
+  --c-secondary: #56738C;
 }
 
 html, body, #root { height: 100%; }
 
 body {
-  @apply bg-sheet dark:bg-header font-sans text-carbon dark:text-carbon antialiased;
+  @apply bg-sheet dark:bg-header font-sans text-carbon dark:text-white antialiased;
   /* Evita zoom por doble-tap en el mostrador táctil */
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
@@ -39,9 +38,9 @@ body {
     --parallax-y: 0px;
     @apply relative overflow-x-hidden;
     background:
-      radial-gradient(circle at 20% 10%, rgba(247,178,80,0.15), transparent 28rem),
-      radial-gradient(circle at 90% 90%, rgba(50,215,75,0.1), transparent 26rem),
-      linear-gradient(135deg, #1A3B5D 0%, #0D223A 100%);
+      radial-gradient(circle at 20% 10%, rgba(223,173,72,0.18), transparent 28rem),
+      radial-gradient(circle at 90% 90%, rgba(167,193,217,0.15), transparent 26rem),
+      linear-gradient(135deg, #56738C 0%, #143959 100%);
     perspective: 1100px;
     transform-style: preserve-3d;
   }
