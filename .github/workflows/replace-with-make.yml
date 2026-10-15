@@ -16,10 +16,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Fetch the Figma Make project
+      - name: Fetch the MI PYME Make project
         run: |
-          git clone --depth 1 "https://api.figma.com/git/make/file/2410675739760453390/public/code/cee1509a-03c3-40bc-a5b8-1645b13137b6.git" /tmp/mi-pyme
-          rm -rf /tmp/mi-pyme/.git
+          rm -rf /tmp/mi-pyme
+          mkdir -p /tmp/mi-pyme
+          git fetch origin mi-pyme-pos-app-development-b469b
+          git archive --format=tar FETCH_HEAD | tar -xf - -C /tmp/mi-pyme
       - name: Replace repository contents
         run: |
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
