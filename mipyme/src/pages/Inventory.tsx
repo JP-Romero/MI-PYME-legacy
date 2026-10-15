@@ -84,16 +84,25 @@ export default function Inventory() {
   };
 
   return (
-    <main className="px-4 pb-32 pt-2">
-      <div className="mb-4 flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-black text-carbon dark:text-white">📦 Catálogo & Inventario</h2>
-          <p className="text-xs text-secondary">Control de stock, precios y categorías</p>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 pb-24">
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-gradient-to-r from-[#F59E0B] via-[#F59E0B] to-[#EA580C] px-4 py-3.5 shadow-md">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">📦</span>
+            <h1 className="font-extrabold text-slate-900 text-base tracking-tight uppercase">Catálogo e Inventario</h1>
+          </div>
+          <button
+            onClick={openNew}
+            className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl shadow-sm active:scale-95 transition-transform"
+          >
+            + Nuevo
+          </button>
         </div>
-        <button onClick={openNew} className="btn-mint text-sm py-2.5 px-4 shadow-glow">+ Nuevo Producto</button>
-      </div>
+      </header>
 
-      {msg && <div className="clay-card mb-3 bg-mint/20 text-center font-bold text-mint">{msg}</div>}
+      <div className="max-w-md mx-auto px-3.5 pt-3 space-y-3">
+        {msg && <div className="p-3 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl text-center shadow-sm">{msg}</div>}
 
       {/* Buscador y Filtros */}
       <div className="mb-4 flex flex-col sm:flex-row gap-2">
@@ -223,7 +232,8 @@ export default function Inventory() {
           </div>
         )}
       </div>
-    </main>
+    </div>
+  </div>
   );
 }
 

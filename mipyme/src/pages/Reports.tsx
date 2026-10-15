@@ -40,41 +40,62 @@ export default function Reports() {
   const totalFiado = pending.reduce((s, c) => s + (c.amount_nio - c.paid_nio), 0);
 
   return (
-    <main className="px-4 pb-32 pt-2">
-      <h2 className="mb-3 text-xl font-black dark:text-white">📊 Reportes · {business?.name}</h2>
-
-      {/* KPIs claymórficos */}
-      <section className="mb-4 grid grid-cols-2 gap-3">
-        <div className="clay-card">
-          <p className="text-xs uppercase opacity-60 dark:text-white">Ventas hoy</p>
-          <p className="text-2xl font-black text-mint">{fmtNio(todayTotal)}</p>
-          <p className="text-[11px] opacity-60 dark:text-white">{fmtUsd(nioToUsd(todayTotal, rate))}</p>
-        </div>
-        <div className="clay-card">
-          <p className="text-xs uppercase opacity-60 dark:text-white">Tickets hoy</p>
-          <p className="text-2xl font-black text-orchid">{count}</p>
-        </div>
-        <div className="clay-card col-span-2 border-l-8 border-amber">
-          <p className="text-xs uppercase opacity-60 dark:text-white">Por cobrar (fiado)</p>
-          <p className="text-2xl font-black text-amber">{fmtNio(totalFiado)}</p>
-        </div>
-      </section>
-
-      {/* Cuentas por cobrar */}
-      <h3 className="mb-2 font-black dark:text-white">Cuentas por cobrar 🟡</h3>
-      {pending.length === 0 && <p className="opacity-60 dark:text-white">Sin fiados pendientes. 🎉</p>}
-      {pending.map(c => (
-        <div key={c.id} className="clay-card mb-2 flex items-center justify-between py-3">
-          <div>
-            <p className="font-bold dark:text-white">{c.customer_name}</p>
-            <p className="text-xs opacity-60 dark:text-white">
-              Pagado {fmtNio(c.paid_nio)} de {fmtNio(c.amount_nio)}
-              {c.due_date ? ` · vence ${c.due_date}` : ''}
-            </p>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 pb-24">
+      {/* Header */}
+      <header className="sticky top-0 z-30 bg-gradient-to-r from-[#F59E0B] via-[#F59E0B] to-[#EA580C] px-4 py-3.5 shadow-md">
+        <div className="max-w-md mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">📈</span>
+            <h1 className="font-extrabold text-slate-900 text-base tracking-tight uppercase">Analítica y Métricas</h1>
           </div>
-          <span className="chip bg-amber text-carbon">{fmtNio(c.amount_nio - c.paid_nio)}</span>
+          <span className="text-xs font-bold bg-slate-900 text-white px-3 py-1 rounded-full truncate max-w-[140px]">
+            {business?.name || 'ANTRA POS'}
+          </span>
         </div>
-      ))}
-    </main>
+      </header>
+
+      <div className="max-w-md mx-auto px-3.5 pt-3 space-y-3">
+        {/* KPIs */}
+        <section className="grid grid-cols-2 gap-2.5">
+          <div className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Ventas Hoy</p>
+            <p className="text-xl font-extrabold text-emerald-600 mt-0.5">{fmtNio(todayTotal)}</p>
+            <p className="text-[10px] text-slate-400">{fmtUsd(nioToUsd(todayTotal, rate))}</p>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tickets Emitidos</p>
+            <p className="text-xl font-extrabold text-slate-900 dark:text-white mt-0.5">{count}</p>
+            <p className="text-[10px] text-slate-400">Total transacciones</p>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm col-span-2 border-l-4 border-l-amber-500">
+            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Por Cobrar (Fiados)</p>
+            <p className="text-2xl font-black text-amber-600 mt-0.5">{fmtNio(totalFiado)}</p>
+            <p className="text-[10px] text-slate-400">{pending.length} cuentas pendientes</p>
+          </div>
+        </section>
+
+        {/* Cuentas por cobrar */}
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2.5">
+          <h3 className="font-extrabold text-xs text-slate-900 dark:text-white uppercase tracking-wider">
+            Detalle de Cuentas por Cobrar 🟡
+          </h3>
+          {pending.length === 0 && <p className="text-xs text-slate-400 py-4 text-center">Sin fiados pendientes 🎉</p>}
+          <div className="space-y-2">
+            {pending.map((c) => (
+              <div key={c.id} className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-between text-xs">
+                <div>
+                  <p className="font-extrabold text-slate-900 dark:text-white uppercase">{c.customer_name}</p>
+                  <p className="text-[10px] text-slate-400">
+                    Pagado {fmtNio(c.paid_nio)} de {fmtNio(c.amount_nio)}
+                    {c.due_date ? ` · vence ${c.due_date}` : ''}
+                  </p>
+                </div>
+                <span className="font-black text-sm text-[#EA580C]">{fmtNio(c.amount_nio - c.paid_nio)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

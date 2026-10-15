@@ -163,6 +163,20 @@ export async function recordSale(businessId: string, sale: SalePayload): Promise
   const { error: e2 } = await supabase.from('sale_items').insert(rows);
   if (e2) await enqueue(businessId, { entity: 'sale', op: 'insert', payload: sale });
 
+  // Guardar en caché de ventas recientes
+  const recentCache = await localStore.get<SaleRow[]>(`recent_sales_${businessId}`, []);
+  const newRow: SaleRow = {
+    id: (data as { id?: string })?.id ?? crypto.randomUUID(),
+    folio: sale.folio,
+    total_nio: sale.total_nio,
+    total_usd: sale.total_usd,
+    status: sale.status,
+    payment_breakdown: sale.payment_breakdown,
+    created_at: new Date().toISOString(),
+    customer_name: sale.customer_name ?? null,
+  };
+  await localStore.set(`recent_sales_${businessId}`, [newRow, ...recentCache.slice(0, 49)]);
+
   // Descontar stock localmente en caché (optimista)
   const cache = await localStore.get<Product[]>(keys.productsCache(businessId), []);
   for (const it of items) {
@@ -249,6 +263,25 @@ export async function fetchSalesInRange(businessId: string, fromIso: string, toI
     .lte('created_at', toIso)
     .order('created_at', { ascending: false });
   return (data as SaleRow[]) ?? [];
+}
+
+/** Obtiene las ventas recientes del negocio activo con caché local. */
+export async function fetchRecentSales(businessId: string, limit = 50): Promise<SaleRow[]> {
+  try {
+    const { data, error } = await supabase
+      .from('sales')
+      .select('id,folio,total_nio,total_usd,status,payment_breakdown,created_at,customer_name')
+      .eq('business_id', businessId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+    if (!error && data && data.length > 0) {
+      await localStore.set(`recent_sales_${businessId}`, data);
+      return data as SaleRow[];
+    }
+  } catch {
+    // offline
+  }
+  return localStore.get<SaleRow[]>(`recent_sales_${businessId}`, []);
 }
 
 /** Ítems vendidos en un rango (para top productos). Se apoya en la tabla sale_items. */

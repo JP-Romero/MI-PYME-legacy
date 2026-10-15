@@ -27,9 +27,9 @@ export const paidTotalNio = (lines: PaymentLine[], rate: number): number =>
 export const changeNio = (totalNio: number, lines: PaymentLine[], rate: number): number =>
   Math.max(0, round2(paidTotalNio(lines, rate) - totalNio));
 
-/** Formatea C$: "C$ 1,250.00" */
+/** Formatea C$: "C$1,250.00" */
 export const fmtNio = (n: number): string =>
-  `C$ ${n.toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  `C$${n.toLocaleString('es-NI', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 /** Formatea US$: "$ 34.00" */
 export const fmtUsd = (n: number): string =>
