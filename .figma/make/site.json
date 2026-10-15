@@ -1,0 +1,10 @@
+{
+  "description": "Streamline sales management for small businesses with an offline-first application featuring secure login, email verification, and a user-friendly interface.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
