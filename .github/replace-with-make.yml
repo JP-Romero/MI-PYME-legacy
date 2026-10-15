@@ -1,0 +1,31 @@
+name: Replace main with MI PYME Make project
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/replace-with-make.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out destination
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch the Figma Make project
+        run: |
+          git clone --depth 1 "https://api.figma.com/git/make/file/2410675739760453390/public/code/cee1509a-03c3-40bc-a5b8-1645b13137b6.git" /tmp/mi-pyme
+          rm -rf /tmp/mi-pyme/.git
+      - name: Replace repository contents
+        run: |
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a /tmp/mi-pyme/. .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Replace project with MI PYME Make app"
+          git push --force origin HEAD:main
